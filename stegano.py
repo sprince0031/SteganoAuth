@@ -1,4 +1,4 @@
-//Hiding Text in an image
+#Hiding Text in an image
 
 from PIL import Image
 import binascii
