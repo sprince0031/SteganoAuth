@@ -8,11 +8,14 @@ def rgb2hex(r, g, b):
 	return '#{:02x}{:02x}{:02x}'.format(r, g, b)
 
 def hex2rgb(hexcode):
-	return tuple(map(ord, hexcode[1:].decode('hex')))
+	Str = hexcode[1:]
+	return tuple(int(Str[i:i+2], 16) for i in (0, 2 ,4))
 
 def str2bin(message):
-	binary = bin(int(binascii.hexlify(message), 16))
-	return binary[2:]
+	binary = ''.join(map(bin,bytearray(message,'utf8')))
+	binaryList = binary[2:].split('0b')
+	binary = ''.join(binaryList)
+	return binary
 
 def bin2str(binary):
 	message = binascii.unhexlify('%x' % (int('0b'+binary,2)))
@@ -76,28 +79,25 @@ def retr(filename):
 			else:
 				binary = binary + digit
 				if (binary[-16:] == '1111111111111110'):
-					print "Success"
+					print("Success")
 					return bin2str(binary[:-16])
 
 		return bin2str(binary)
 	return "Incorrect Image Mode, Couldn't Retrieve"
 
 def Main():
-        parser = optparse.OptionParser('usage %prog '+\
-		'-e/-d <target file>')
-	parser.add_option('-e', dest='hide', type='string', \
-		help='target picture path to hide text')
-	parser.add_option('-d', dest='retr', type='string', \
-		help='target picture path to retrieve text')
+	parser = optparse.OptionParser('usage %prog -e/-d <target file>')
+	parser.add_option('-e', dest='hide', type='string', help='target picture path to hide text')
+	parser.add_option('-d', dest='retr', type='string', help='target picture path to retrieve text')
 
 	(options, args) = parser.parse_args()
 	if (options.hide != None):
-		text = raw_input("Enter a message to hide: ")
-		print hide(options.hide, text)
+		text = input("Enter a message to hide: ")
+		print(hide(options.hide, text))
 	elif (options.retr != None):
-                print retr(options.retr)
+                print(retr(options.retr))
 	else:
-		print parser.usage
+		print(parser.usage)
 		exit(0)
 
 
